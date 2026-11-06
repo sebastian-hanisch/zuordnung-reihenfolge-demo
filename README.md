@@ -71,7 +71,7 @@ Die genauen Werte (auch je Familie) stehen in `tests/test_claims.py`; Zeiten ste
 ## Verifikation
 
 - **Tests** (`pytest tests/`): 168 Tests, rund sechseinhalb Minuten (Windows, Python 3.14; die 240 Instanzen der Zahlen-Tests rechnen parallel). Handwerte (Handbeispiel 34 und 51 mit allen neun Wegen von Hand; Zuordnungsmatrizen), Aufzählung als Orakel (**alle** Zuordnungen und **alle** Reihenfolgen bei `P = 6`, `T = 3`: Held–Karp, Ungarische Methode, gemeinsames Optimum und kürzeste Fahrt durch die Platzierungen gleich der Aufzählung; Ungarische Methode zusätzlich gegen `scipy`), Eigenschaften (die wechselweise Optimierung steigt nie und endet an einem Fixpunkt beider Schritte, kein Verfahren liegt unter dem gemeinsamen Optimum, die untere Schranke nie darüber, die Schwerpunkt-Zuordnung minimiert die Wegesumme über alle Zuordnungen, die Wege einer Fahrt summieren sich zu den Kosten), Verdikte (Art und Text folgen den Zahlen), Abbildungen (Daten gleich den Werten, die gezeichnete Fahrt hat die Länge der Kosten), AppTest (alle Regler an ihren Grenzen, Presets, Rechenknopf mit verkleinerter Reihe, PDF), und die **Zahlen der README** an den 240 festen Instanzen (`tests/test_claims.py`, parallel gerechnet; Zählungen genau, Prozentwerte auf drei Stellen).
-- **Nicht getestet:** Zeiten; kein Mutationstest; Linux-CI: noch nicht gelaufen.
+- **Nicht getestet:** Zeiten; kein Mutationstest; Linux-CI: grün im zweiten Lauf (168 bestanden, fünf Minuten); der erste war rot, weil Gleichstände auf Linux anders aufgelöst wurden (Abhilfe siehe „Gleichstände“ in den Grenzen); die Zahlen der Tabellen stammen aus dem Windows-Lauf.
 
 ## Dateistruktur
 
