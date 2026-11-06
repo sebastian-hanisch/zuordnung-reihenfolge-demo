@@ -267,6 +267,7 @@ st.markdown(
 | **Zuführplätze auf einer Geraden** | Mehrere Reihen oder bewegliche Wagen ändern die Geometrie; die Plätze liegen hier fest auf y = −2. | – |
 | **Maschinenpraxis ist ein Stand-in** | Die Regel „häufigste Typen in die Mitte“ ist eine Annahme, keine Messung an einer Maschine; echte Praxis nimmt Rüstzeiten, Gurtlängen und Bauteilgrößen dazu. | – |
 | **Exakt nur klein** | Das gemeinsame Optimum rechnet alle `T!` Zuordnungen mit Held–Karp (`2^P`-Teilmengen): bis `P = 12`, `T = 5`. Für große Platinen gibt es das Optimum nicht; die Messlatte fehlt dort. | Stück 8 (Schranken im Baum) |
+| **Gleichstände** | Bei mehreren gleich guten Reihenfolgen oder Zuordnungen (bei Tschebyscheff-Abständen häufig) hängt der Fixpunkt der wechselweisen Optimierung davon ab, welche gewählt wird; hier gilt der erste Index innerhalb von `10⁻⁹`, die Zuordnungsmatrix ist auf neun Stellen gerundet. Die Zählungen gelten für diese Auflösung. | – |
 | **Wechselweise: nur ein Fixpunkt-Verfahren** | Mehrere Starts, Abstiege mit Nachbarschaften oder Annealing sind nur in den Starts „bester von 3 Zufallsstarts“ geprüft. | Stück 10, 12 |
 | **Relaxation ohne Schranke im Baum** | Die untere Schranke ist schwach (im Mittel einige Prozent unter dem Optimum); nützlich ist die Rundung, nicht die Schranke. | Stück 5, 7 |
 | **Die Familien sind erfunden** | Echte Platinen haben andere Verteilungen der Typen (Kondensatoren in der Masse, wenige große Bauteile). Ein Befund über diese Familien ist keiner über Platinen. | Stück 2 |

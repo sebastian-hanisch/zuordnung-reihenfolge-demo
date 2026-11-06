@@ -40,7 +40,7 @@ def test_hand_joint_and_alternating(hand):
 
 def test_hand_fixpoint_is_a_local_optimum_of_both_steps(hand):
     bad = M.alternating(hand, (1, 0))
-    assert M.best_order(hand, bad["sigma"])[0] == bad["cost"] and M.best_assignment(hand, bad["order"])[0] >= bad["cost"] - 1e-9
+    assert M.best_order(hand, bad["sigma"])[0] == bad["cost"] and M.best_assignment(hand, bad["order"])[0] >= bad["cost"] - 1e-7
 
 
 # --- Aufzählung als Gegenprobe --------------------------------------------------------------------------------------------------------------
@@ -87,9 +87,9 @@ def test_alternating_never_increases_and_ends_at_a_fixpoint(kind):
     for sg in itertools.permutations(range(inst.T)):
         a = M.alternating(inst, sg)
         costs = [x for _, c1, c2 in a["trace"] for x in (c1, c2)]
-        assert all(b <= a_ + 1e-9 for a_, b in zip(costs, costs[1:]))
+        assert all(b <= a_ + 1e-7 for a_, b in zip(costs, costs[1:]))
         assert M.tour_cost(inst, a["sigma"], a["order"]) == pytest.approx(a["cost"])
-        assert M.best_assignment(inst, a["order"])[0] >= a["cost"] - 1e-9 and M.best_order(inst, a["sigma"])[0] == pytest.approx(a["cost"])
+        assert M.best_assignment(inst, a["order"])[0] >= a["cost"] - 1e-7 and M.best_order(inst, a["sigma"])[0] == pytest.approx(a["cost"])
 
 
 def test_alternating_cost_is_never_below_the_joint_optimum():
@@ -97,7 +97,7 @@ def test_alternating_cost_is_never_below_the_joint_optimum():
         inst = M.make(kind, 8, 4, 100004)
         j = M.joint_exact(inst)[0]
         for sg in itertools.permutations(range(inst.T)):
-            assert M.alternating(inst, sg)["cost"] >= j - 1e-9
+            assert M.alternating(inst, sg)["cost"] >= j - 1e-7
 
 
 def test_basins_cover_every_start_and_contain_the_optimum_end():
@@ -112,7 +112,7 @@ def test_basins_cover_every_start_and_contain_the_optimum_end():
 def test_lower_bound_is_below_the_optimum(kind):
     for s in range(10):
         inst = M.make(kind, 8, 4, 100000 + s)
-        assert M.lower_bound(inst) <= M.joint_exact(inst)[0] + 1e-9
+        assert M.lower_bound(inst) <= M.joint_exact(inst)[0] + 1e-7
 
 
 def test_start_assignments_are_permutations_and_deterministic():
@@ -163,3 +163,17 @@ def test_the_families_differ_as_described():
     cl = M.make("clustered", 12, 4, 100000)
     spread = lambda inst: np.mean([inst.pos[inst.typ == t].std(axis=0).mean() for t in range(inst.T) if (inst.typ == t).sum() > 1])
     assert spread(cl) < spread(M.make("random", 12, 4, 100000))
+
+
+@pytest.mark.parametrize("kind", C.KINDS)
+def test_fixpoints_do_not_depend_on_floating_point_noise(kind):
+    """Gleichstände (in Tschebyscheff-Abständen häufig) werden mit Toleranz aufgelöst: Rauschen der Größe 1e-13 in den Orten ändert Fixpunkte und Fangbecken nicht.
+    (Die Linux-CI fand sonst andere Fixpunkte als Windows: 170 statt 172 hängende Instanzen.)"""
+    rng = np.random.default_rng(5)
+    for s in range(6):
+        inst = M.make(kind, 8, 4, 100000 + s)
+        noisy = M.Inst(inst.pos + rng.normal(0.0, 1e-13, inst.pos.shape), inst.typ, inst.T)
+        for sg in (M.sigma_practice(inst), M.sigma_centroid(inst)):
+            a, b = M.alternating(inst, sg), M.alternating(noisy, sg)
+            assert a["cost"] == pytest.approx(b["cost"], abs=1e-6) and a["rounds"] == b["rounds"]
+        assert M.joint_exact(inst)[0] == pytest.approx(M.joint_exact(noisy)[0], abs=1e-6)

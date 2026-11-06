@@ -14,7 +14,7 @@ def v8():
 def test_core_verdict_names_the_numbers(v8):
     kind, text = E.verdict_core(E.Settings(), v8)
     assert kind == "info" and "hängt" in text and E.num(v8["joint"]) in text and E.num(v8["alt"]["practice"]["cost"]) in text and E.num(v8["centroid"]) in text
-    assert "Eine Instanz, kein Befund über die Familie" in text and "24 Zuordnungen" in text and "führen 7 zum Optimum" in text
+    assert "Eine Instanz, kein Befund über die Familie" in text and "24 Zuordnungen" in text and "führen 3 zum Optimum" in text
 
 
 def test_core_verdict_is_success_when_the_start_reaches_the_optimum(v8):
@@ -29,13 +29,13 @@ def test_hand_verdict_states_both_values():
 
 def test_alternating_verdict_lists_the_rounds(v8):
     kind, text = E.verdict_alternating(E.Settings(), v8)
-    assert "76,42 → 76,35 → 76,35" in text and "nicht" in text
+    assert "83,75 → 83,75" in text and "nicht" in text
     assert "Fixpunkt ist das gemeinsame Optimum" in E.verdict_alternating(E.Settings(start="centroid"), v8)[1]
 
 
 def test_basin_verdict_counts_the_starts(v8):
     text = E.verdict_basins(E.Settings(), v8)[1]
-    assert "24 Startzuordnungen" in text and "**9**" in text and "7 von 24" in text and "−0,00" not in text and "-0,00" not in text
+    assert "24 Startzuordnungen" in text and "**8**" in text and "3 von 24" in text and "−0,00" not in text and "-0,00" not in text
 
 
 def test_relax_verdict_states_the_check_as_a_consequence(v8):

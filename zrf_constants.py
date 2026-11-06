@@ -4,7 +4,7 @@ P_CHOICES = (6, 8, 10, 12)                            # Platzierungen
 T_CHOICES = (3, 4, 5)                                 # Typen = Zuführplätze
 DEFAULT_P, DEFAULT_T = 8, 4
 HEAVY = (12, 5)                                       # ab dieser Größe nur auf Knopfdruck (2^12 Teilmengen mal 5! Zuordnungen)
-SEED_MAX, DEFAULT_SEED = 999999, 41
+SEED_MAX, DEFAULT_SEED = 999999, 46
 FIXED_SEED0 = 100000                                  # feste Instanzen: Seeds ab 100000 (nie ein einzelner Seed als Befund)
 SEEDS = 20                                            # Seeds je Familie und Größe
 CONFIGS = ((8, 4), (10, 5), (12, 4))                  # (P, T) der festen Reihen: 3 Größen × 4 Familien × 20 Seeds = 240 Instanzen

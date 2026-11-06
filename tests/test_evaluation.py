@@ -37,14 +37,14 @@ def test_the_default_instance_is_stuck_from_the_default_start(v8):
 
 def test_every_method_is_at_or_above_the_joint_optimum(v8):
     for k in C.METHODS:
-        assert v8[k] >= v8["joint"] - 1e-9, k
-    assert v8["lb"] <= v8["joint"] + 1e-9
+        assert v8[k] >= v8["joint"] - 1e-7, k
+    assert v8["lb"] <= v8["joint"] + 1e-7
 
 
 def test_alternating_never_loses_against_its_start(v8):
     inst = v8["inst"]
-    assert v8["alt_practice"] <= v8["practice"] + 1e-9 and v8["alt_centroid"] <= v8["centroid"] + 1e-9
-    assert v8["alt_random3"] <= v8["alt_random1"] + 1e-9 and v8["order_first_alt"] <= v8["order_first"] + 1e-9
+    assert v8["alt_practice"] <= v8["practice"] + 1e-7 and v8["alt_centroid"] <= v8["centroid"] + 1e-7
+    assert v8["alt_random3"] <= v8["alt_random1"] + 1e-7 and v8["order_first_alt"] <= v8["order_first"] + 1e-7
     assert v8["practice"] == pytest.approx(M.best_order(inst, v8["sigma_practice"])[0]) and v8["centroid"] == pytest.approx(M.best_order(inst, v8["sigma_centroid"])[0])
 
 

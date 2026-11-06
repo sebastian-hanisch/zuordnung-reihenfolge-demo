@@ -113,6 +113,11 @@ def legs(inst: Inst, sigma, order) -> list:
 
 # ----------------------------------------------------------------------------- feste Zuordnung: Reihenfolge (Held–Karp)
 
+def _first_min(x: np.ndarray) -> int:
+    """Index des ersten Eintrags, der höchstens `EPS` über dem Minimum liegt. Gleichstände (in Tschebyscheff-Abständen häufig) werden so auf jedem Rechner gleich aufgelöst; ein reines `argmin` folgt dem Gleitkommarauschen (Linux und Windows wählten verschiedene gleich gute Reihenfolgen)."""
+    return int(np.flatnonzero(x <= x.min() + C.EPS)[0])
+
+
 def _held_karp(P: int, w: np.ndarray, start: np.ndarray, end: np.ndarray) -> tuple:
     """Kürzester Weg über alle Knoten: Kosten start[j] für den ersten, w[i, j] von i nach j, end[i] am Ende. Held–Karp über Teilmengen. Rückgabe (Kosten, Reihenfolge)."""
     INF = float("inf")
@@ -129,14 +134,14 @@ def _held_karp(P: int, w: np.ndarray, start: np.ndarray, end: np.ndarray) -> tup
             if S >> j & 1:
                 continue
             cand = row + w[:, j]
-            i = int(np.argmin(cand))
+            i = _first_min(cand)
             v = cand[i]
             T_ = S | (1 << j)
-            if v < dp[T_, j]:
+            if v < dp[T_, j] - C.EPS:
                 dp[T_, j] = v
                 par[T_, j] = i
     fin = dp[full] + end
-    last = int(np.argmin(fin))
+    last = _first_min(fin)
     order, S, j = [], full, last
     while j != -1:
         order.append(j)
@@ -179,7 +184,7 @@ def order_costs(inst: Inst, order) -> np.ndarray:
 
 def best_assignment(inst: Inst, order) -> tuple:
     """Beste Zuordnung bei fester Reihenfolge: Zuordnungsproblem, exakt. Rückgabe (Kosten, σ)."""
-    c = order_costs(inst, order)
+    c = np.round(order_costs(inst, order), 9)                       # auf 9 Stellen gerundet: Gleichstände der Zuordnung hängen nicht am Gleitkommarauschen
     assign, total = hungarian(c)
     return float(total + inst.dhp[order[-1]]), np.array([int(a) for a in assign])
 
@@ -227,7 +232,7 @@ def sigma_centroid(inst: Inst) -> np.ndarray:
     c = np.zeros((inst.T, inst.T))
     for t in range(inst.T):
         c[t] = 2.0 * inst.dps[inst.typ == t].sum(axis=0)
-    assign, _ = hungarian(c)
+    assign, _ = hungarian(np.round(c, 9))
     return np.array([int(a) for a in assign])
 
 
@@ -245,7 +250,7 @@ def lower_bound(inst: Inst) -> float:
     c = np.zeros((inst.T, inst.T))
     for t in range(inst.T):
         c[t] = inst.dps[inst.typ == t].sum(axis=0)
-    _, first = hungarian(c)
+    _, first = hungarian(np.round(c, 9))
     back = float(inst.dps.min(axis=1).sum() - inst.dps.min(axis=1).max())
     return float(first + back + inst.dhs.min() + inst.dhp.min())
 

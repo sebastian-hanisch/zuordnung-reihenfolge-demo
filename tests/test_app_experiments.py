@@ -46,8 +46,8 @@ def _metrics(at):
 def test_the_default_page_shows_the_five_metrics_and_the_core_verdict():
     at = _app()
     m = _metrics(at)
-    assert set(m) == LABELS and m["Gemeinsames Optimum"].value == "74,23" and m["Wechselweise Optimierung"].value == "76,35" and "hängt" in m["Wechselweise Optimierung"].delta
-    assert m["Startzuordnungen, die zum Optimum führen"].value == "7 von 24"
+    assert set(m) == LABELS and m["Gemeinsames Optimum"].value == "80,53" and m["Wechselweise Optimierung"].value == "83,75" and "hängt" in m["Wechselweise Optimierung"].delta
+    assert m["Startzuordnungen, die zum Optimum führen"].value == "3 von 24"
     assert "Eine Instanz, kein Befund über die Familie" in _texts(at)
 
 
